@@ -1,0 +1,45 @@
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form Input Produk -->
+                <form id="editProductForm" method="POST" action="{{ route('produk.update', 'product_id') }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Foto Produk -->
+                    <div class="mb-3">
+                        <label for="edit_foto" class="form-label">Foto Produk</label>
+                        <input type="file" class="form-control border border-2" id="edit_foto" name="foto">
+                    </div>
+                    <!-- Nama Produk -->
+                    <div class="mb-3">
+                        <label for="edit_nama_produk" class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control border border-2" id="edit_nama_produk" name="nama_produk" required>
+                    </div>
+                    <!-- Harga Produk -->
+                    <div class="mb-3">
+                        <label for="edit_harga_produk" class="form-label">Harga Produk</label>
+                        <input type="number" step="0.01" class="form-control border border-2" id="edit_harga_produk" name="harga_produk" required>
+                    </div>
+                    <!-- Deskripsi -->
+                    <div class="mb-3">
+                        <label for="edit_deskripsi" class="form-label">Deskripsi</label>
+                        <textarea class="form-control border border-2" id="edit_deskripsi" name="deskripsi" rows="3" required></textarea>
+                    </div>
+                    <!-- Stok -->
+                    <div class="mb-3">
+                        <label for="edit_stok" class="form-label">Stok</label>
+                        <input type="number" class="form-control border border-2" id="edit_stok" name="stok" required>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Update Produk</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

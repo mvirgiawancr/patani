@@ -2,31 +2,35 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    // Tentukan nama kolom primary key jika tidak menggunakan 'id'
+    protected $primaryKey = 'id_user'; // Primary key menggunakan 'id_user'
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
+        'no_telepon',
+        'id_alamat',
+        'role',
+        'foto'
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,15 +38,39 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Relasi ke tabel alamat (one-to-one).
+     */
+    public function alamat()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Alamat::class, 'id_alamat', 'id_alamat');
     }
+
+ 
+    public function produk()
+    {
+        return $this->hasMany(Produk::class, 'id_user');
+    }
+    /**
+     * Mutator untuk menyimpan password yang di-hash (jika hashing digunakan).
+     */
+    public function setPasswordAttribute($value)
+    {
+        // Simpan password dengan hashing jika perlu
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function pesanan()
+    {
+        return $this->hasMany(DetailPesanan::class, 'id_pembeli', 'id_user');
+    }
+
 }
