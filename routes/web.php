@@ -68,14 +68,12 @@ Route::put('/patani/settings', [ProdukController::class, 'updateSettingspatani']
 
 // Rute untuk pencarian produk (AJAX request tetap menggunakan fungsi index)
 Route::get('/cari-produk', [HomeController::class, 'cari'])->name('produk.cari');
+Route::get('/cari-produk-petani', [ProdukController::class, 'cariPetani'])->name('produk.cariPetani');
 
 // untuk cari berdasarkan lokasi
 // Route untuk pencarian berdasarkan lokasi
 
 Route::get('/search-by-location', [HomeController::class, 'searchByLocation'])->name('produk.cari.lokasi');
-
-
-
 
 
 

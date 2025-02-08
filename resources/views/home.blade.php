@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>FoodMart - Free eCommerce Grocery Store HTML Website Template</title>
+  <title>Patani</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,7 +179,6 @@
   </svg>
 
 
-  <!-- modal notifikasi -->
   <!-- --------------------------------------------Modal Notifikasi Pesanan------------------------------------------- -->
 
   <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="orderNotificationModal"
@@ -190,7 +189,7 @@
     <div class="offcanvas-body">
       <div class="mb-3">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
-          <span class="text-primary">Pesanan yang Sudah Di-Checkout</span>
+          <span class="text-primary">Pesanan Anda</span>
         </h4>
         <hr>
         @if($orders && $orders->count() > 0)
@@ -271,11 +270,6 @@ style="background-color: grey; color: white;" @endif>
       </div>
     </div>
   </div>
-
-
-
-
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const produkGroups = document.querySelectorAll('.card');
@@ -420,7 +414,6 @@ style="background-color: grey; color: white;" @endif>
 
 
   <!---------------------------------- modal pengaturan user---------------------------------------------------------------------------------------------- -->
-  <!-- Modal Pengaturan -->
   <div class="modal fade" id="settingModal1" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -533,10 +526,7 @@ style="background-color: grey; color: white;" @endif>
     </div>
   </div>
 
-  <!-- fskdfjk -->
-
-
-  <!-- Modal Pembayaran -->
+  <!------------------------------------- Modal Pembayaran --------------------------------------------------------------------------------------------- -->
   @foreach ($orders as $order)
     <!-- Modal untuk setiap pesanan -->
     <div class="modal fade" id="modalPembayaran{{ $order->id_pesanan }}" tabindex="-1"
@@ -572,10 +562,8 @@ style="background-color: grey; color: white;" @endif>
     </div>
     </div>
   @endforeach
-
   <!-- akhir Modal Pembayaran -->
 
-  <!-- Modal API Openstreetmap-->
   <!-- Modal Cari Berdasarkan Lokasi -->
   <div class="modal fade" id="searchLocationModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -593,14 +581,13 @@ style="background-color: grey; color: white;" @endif>
           <div id="map" style="height: 450px;"></div>
         </div>
         <div class="modal-footer">
-        
+
           <button id="searchLocationBtn" class="btn btn-primary">Cari Berdasarkan Lokasi</button>
-         
+
         </div>
       </div>
     </div>
   </div>
-  <!-- Akhir modal API Openstreetmap-->
 
 
   <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasSearch"
@@ -635,7 +622,7 @@ style="background-color: grey; color: white;" @endif>
         </div>
         <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
           <div class="search-bar row bg-light p-2 my-2 rounded-4">
-            <div class="col-10 col-md-11">
+            <div class="col-10 col-md-12">
               <form id="search-form" method="GET" action="{{ route('produk.cari') }}" class="text-center">
                 @csrf
                 <div class="input-group">
@@ -647,11 +634,17 @@ style="background-color: grey; color: white;" @endif>
                         d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
                     </svg>
                   </button>
+                  <!-- Tombol X untuk refresh halaman -->
+                  <button type="button" id="refresh-btn" class="btn">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                  <script>document.getElementById('refresh-btn').addEventListener('click', function () { location.reload(); });</script>
                 </div>
               </form>
             </div>
           </div>
         </div>
+
 
 
 
@@ -741,12 +734,14 @@ style="background-color: grey; color: white;" @endif>
             <button class="border-0 bg-transparent d-flex flex-column gap-2 lh-1" type="button"
             data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
             <a href="#" class="rounded-circle bg-light p-2 mx-1">
-              <i class="bi bi-cart-fill" style="font-size: 30px; position: relative;">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle "
-                style="font-size: 10px; ">
-                <span class="bg-primary rounded-circle "
-                style="font-size: 10px; padding: 0.2rem 0.5rem;">{{ count($keranjangItems) }}</span>
-              </span>
+              <i class="bi bi-cart-fill" style="font-size: 30px; position: relative; tex">
+              <!-- Badge untuk jumlah item di keranjang -->
+              @if(count($keranjangItems) > 0)
+          <span class="position-absolute top-0 start-100 translate-middle badge text-light"
+          style="background-color: rgb(255, 0, 0); font-size: 12px; padding: 0.2rem 0.4rem; border-radius: 50%; font-style: normal;">
+          {{ count($keranjangItems) }}
+          </span>
+        @endif
               </i>
             </a>
             </button>
@@ -827,14 +822,11 @@ style="background-color: grey; color: white;" @endif>
                 <div class="content-wrapper col-md-7">
                   <div class="categories my-3">100% natural</div>
                   <h3 class="display-4">Strawberry</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa diam elementum.
+                  <p>Rasakan kesegaran alami dengan stroberi pilihan yang manis dan kaya akan vitamin. Cocok untuk camilan sehat setiap hari.
                   </p>
-                  <a href="#"
-                  class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1 px-4 py-3 mt-3">Shop
-                  Now</a>
                 </div>
                 <div class="img-wrapper col-md-5">
-                  <img src="images/product-thumb-1.png" class="img-fluid">
+                  <img src="images/strawberry.png" class="img-fluid">
                 </div>
                 </div>
               </div>
@@ -843,14 +835,12 @@ style="background-color: grey; color: white;" @endif>
                 <div class="row banner-content p-5">
                 <div class="content-wrapper col-md-7">
                   <div class="categories mb-3 pb-3">100% natural</div>
-                  <h3 class="banner-title">Fresh Smoothie & Summer Juice</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa diam elementum.
-                  </p>
-                  <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">Shop
-                  Collection</a>
+                  <h3 class="banner-title">Fresh Carrots</h3>
+                  <p>Nikmati kesegaran dan wortel segar yang kaya akan serat dan nutrisi. Cocok untuk salad sehat setiap hari!</p>
+                  
                 </div>
                 <div class="img-wrapper col-md-5">
-                  <img src="images/product-thumb-1.png" class="img-fluid">
+                  <img src="images/carrot.png" class="img-fluid">
                 </div>
                 </div>
               </div>
@@ -859,14 +849,12 @@ style="background-color: grey; color: white;" @endif>
                 <div class="row banner-content p-5">
                 <div class="content-wrapper col-md-7">
                   <div class="categories mb-3 pb-3">100% natural</div>
-                  <h3 class="banner-title">Heinz Tomato Ketchup</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dignissim massa diam elementum.
-                  </p>
-                  <a href="#" class="btn btn-outline-dark btn-lg text-uppercase fs-6 rounded-1">Shop
-                  Collection</a>
+                  <h3 class="banner-title">Fresh Organic Tomatoes</h3>
+                  <p>Tomat segar organik yang kaya akan vitamin C dan antioksidan. Cocok untuk salad, masakan, atau dikonsumsi langsung untuk gaya hidup sehat.</p>
+                  
                 </div>
                 <div class="img-wrapper col-md-5">
-                  <img src="images/product-thumb-2.png" class="img-fluid">
+                  <img src="images/tomato.png" class="img-fluid">
                 </div>
                 </div>
               </div>
@@ -884,7 +872,6 @@ style="background-color: grey; color: white;" @endif>
               <div class="content-wrapper col-md-7">
               <div class="categories sale mb-3 pb-3">20% off</div>
               <h3 class="banner-title">Fruits & Vegetables</h3>
-              <a href="#" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
                 <use xlink:href="#arrow-right"></use>
                 </svg></a>
               </div>
@@ -892,17 +879,15 @@ style="background-color: grey; color: white;" @endif>
             </div>
             </div>
 
-            <div class="banner-ad bg-danger block-3"
-            style="background:url('images/ad-image-2.png') no-repeat;background-position: right bottom">
+            <div class="banner-ad bg-warning block-3"
+            style="background:url('images/fresh.png') no-repeat;background-position: right bottom">
             <div class="row banner-content p-5">
 
               <div class="content-wrapper col-md-7">
-              <div class="categories sale mb-3 pb-3">15% off</div>
-              <h3 class="item-title">Baked Products</h3>
-              <a href="#" class="d-flex align-items-center nav-link">Shop Collection <svg width="24" height="24">
-                <use xlink:href="#arrow-right"></use>
-                </svg></a>
+                <div class="categories sale mb-3 pb-3">15% off</div>
+                <h3 class="item-title">Fresh Farm Produce</h3>
               </div>
+              
 
             </div>
             </div>
@@ -917,59 +902,59 @@ style="background-color: grey; color: white;" @endif>
 
 
       <!-- ---------------------------------------------------------PRODUK TERBARU-------------------------------------------------------------------- -->
-      <section class="py-5 overflow-hidden">
-        <div class="container-fluid">
-        <div class="row">
+      <!-- <section class="py-5 overflow-hidden">
+          <div class="container-fluid">
+          <div class="row">
           <div class="col-md-12">
 
           <div class="section-header d-flex justify-content-between">
 
-            <h2 class="section-title">Just arrived</h2>
+          <h2 class="section-title">Just arrived</h2>
 
-            <div class="d-flex align-items-center">
-            <a href="#" class="btn-link text-decoration-none">View All Categories →</a>
-            <div class="swiper-buttons">
-              <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
-              <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
-            </div>
-            </div>
+          <div class="d-flex align-items-center">
+          <a href="#" class="btn-link text-decoration-none">View All Categories →</a>
+          <div class="swiper-buttons">
+            <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
+            <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
+          </div>
+          </div>
           </div>
 
           </div>
-        </div>
-        <div class="row">
+          </div>
+          <div class="row">
           <div class="col-md-12">
 
           <div class="products-carousel swiper">
-            <div class="swiper-wrapper">
+          <div class="swiper-wrapper">
 
-            <!-- Tandai boss -->
-            @if(isset($produkAll) && count($produkAll) > 0)
-        @foreach($produkAll as $item)
-      <div class="product-item swiper-slide">
-        <a href="{{ route('produk.show', $item->id_produk) }}" title="{{ $item->nama_produk }}"
-        class="product-link">
-        <figure>
-        <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_produk }}" class="tab-image">
-        </figure>
-        <h3>{{ $item->nama_produk }}</h3>
-        <span class="qty">stok : {{ $item->stok }}</span>
-        <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }}</span>
-        </a>
-      </div>
-    @endforeach
-      @else
-    <p class="text-center">Belum ada produk terbaru.</p>
-  @endif
-
-            </div>
+          Tandai boss
+          @if(isset($produkAll) && count($produkAll) > 0)
+          @foreach($produkAll as $item)
+          <div class="product-item swiper-slide">
+          <a href="{{ route('produk.show', $item->id_produk) }}" title="{{ $item->nama_produk }}"
+          class="product-link">
+          <figure>
+          <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_produk }}" class="tab-image">
+          </figure>
+          <h3>{{ $item->nama_produk }}</h3>
+          <span class="qty">stok : {{ $item->stok }}</span>
+          <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }}</span>
+          </a>
           </div>
-          <!-- / products-carousel -->
+        @endforeach
+          @else
+        <p class="text-center">Belum ada produk terbaru.</p>
+        @endif
 
           </div>
-        </div>
-        </div>
-      </section>
+          </div>
+          / products-carousel
+
+          </div>
+          </div>
+          </div>
+          </section> -->
     @endif
 
   </div>
@@ -986,16 +971,6 @@ style="background-color: grey; color: white;" @endif>
           <div class="bootstrap-tabs product-tabs">
             <div class="tabs-header d-flex justify-content-between border-bottom my-5">
               <h3>Daftar Semua Produk</h3>
-              <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <a href="#" class="nav-link text-uppercase fs-6 active" id="nav-all-tab" data-bs-toggle="tab"
-                    data-bs-target="#nav-all">All</a>
-                  <a href="#" class="nav-link text-uppercase fs-6" id="nav-fruits-tab" data-bs-toggle="tab"
-                    data-bs-target="#nav-fruits">Fruits & Veges</a>
-                  <a href="#" class="nav-link text-uppercase fs-6" id="nav-juices-tab" data-bs-toggle="tab"
-                    data-bs-target="#nav-juices">Juices</a>
-                </div>
-              </nav>
             </div>
             <div class="tab-content" id="nav-tabContent">
               <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
@@ -1020,23 +995,23 @@ style="background-color: grey; color: white;" @endif>
                 <span class="qty">stok : {{ $item->stok }}</span>
                 <span class="rating">
                 <svg width="24" height="24" class="text-primary">
-                  <use xlink:href="#star-solid"></use>
                 </svg>
-                4.5
                 </span>
                 <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }}</span>
-                <span>{{ $item->user->username ?? 'Tidak diketahui' }}</span>
+                <span><i class="bi bi-person-fill"></i>
+                {{ $item->user->username ?? 'Tidak diketahui' }}</span>
               </div>
               </a>
-              <div class="d-flex justify-content-between mt-2">
+              <div class="d-flex mt-2">
               <!-- Tombol tambah, tetap di luar link -->
-              <form action="{{ route('keranjang.tambahDB', $item->id_produk) }}" method="POST">
+              <form action="{{ route('keranjang.tambahDB', $item->id_produk) }}" method="POST" class="w-100">
                 @csrf
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn btn-primary w-100 text-center">
                 <span>+ Keranjang</span>
                 </button>
               </form>
               </div>
+
             </div>
             </div>
           @endforeach
@@ -1066,15 +1041,13 @@ style="background-color: grey; color: white;" @endif>
       <div class="bg-warning py-5 rounded-5" style="background-image: url('images/bg-pattern-2.png') no-repeat;">
         <div class="container">
           <div class="row">
-            <div class="col-md-4">
-              <img src="images/phone.png" alt="phone" class="image-float img-fluid">
-            </div>
             <div class="col-md-8">
               <h2 class="my-5">Belanja Hasil tani lebih cepat di web PATANI</h2>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus nonet
-                psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames semper erat ac in
-                suspendisse iaculis. Amet blandit tortor praesent ante vitae. A, enim pretiummi senectus magna. Sagittis
-                sed ptibus liberolectus non et psryroin.</p>
+              <p>PATANI adalah aplikasi web inovatif yang dirancang untuk mempermudah
+                masyarakat dalam membeli hasil tani langsung dari petani lokal.
+                Dilengkapi dengan Fitur Lokasi yang dapat mempermudah mencari Petani
+                di sekitar Anda!. Dengan antarmuka yang ramah pengguna, PATANI
+                menawarkan pengalaman belanja online yang cepat, aman, dan efisien.</p>
             </div>
           </div>
         </div>
@@ -1087,43 +1060,7 @@ style="background-color: grey; color: white;" @endif>
   <!-- ------------------------------KETERANGAN DIATAS FOOTER---------------------------------------------- -->
   <section class="py-5">
     <div class="container-fluid">
-      <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-5">
-        <div class="col">
-          <div class="card mb-3 border-0">
-            <div class="row">
-              <div class="col-md-2 text-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                  <path fill="currentColor"
-                    d="M21.5 15a3 3 0 0 0-1.9-2.78l1.87-7a1 1 0 0 0-.18-.87A1 1 0 0 0 20.5 4H6.8l-.33-1.26A1 1 0 0 0 5.5 2h-2v2h1.23l2.48 9.26a1 1 0 0 0 1 .74H18.5a1 1 0 0 1 0 2h-13a1 1 0 0 0 0 2h1.18a3 3 0 1 0 5.64 0h2.36a3 3 0 1 0 5.82 1a2.94 2.94 0 0 0-.4-1.47A3 3 0 0 0 21.5 15Zm-3.91-3H9L7.34 6H19.2ZM9.5 20a1 1 0 1 1 1-1a1 1 0 0 1-1 1Zm8 0a1 1 0 1 1 1-1a1 1 0 0 1-1 1Z" />
-                </svg>
-              </div>
-              <div class="col-md-10">
-                <div class="card-body p-0">
-                  <h5>Free delivery</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card mb-3 border-0">
-            <div class="row">
-              <div class="col-md-2 text-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                  <path fill="currentColor"
-                    d="M19.63 3.65a1 1 0 0 0-.84-.2a8 8 0 0 1-6.22-1.27a1 1 0 0 0-1.14 0a8 8 0 0 1-6.22 1.27a1 1 0 0 0-.84.2a1 1 0 0 0-.37.78v7.45a9 9 0 0 0 3.77 7.33l3.65 2.6a1 1 0 0 0 1.16 0l3.65-2.6A9 9 0 0 0 20 11.88V4.43a1 1 0 0 0-.37-.78ZM18 11.88a7 7 0 0 1-2.93 5.7L12 19.77l-3.07-2.19A7 7 0 0 1 6 11.88v-6.3a10 10 0 0 0 6-1.39a10 10 0 0 0 6 1.39Zm-4.46-2.29l-2.69 2.7l-.89-.9a1 1 0 0 0-1.42 1.42l1.6 1.6a1 1 0 0 0 1.42 0L15 11a1 1 0 0 0-1.42-1.42Z" />
-                </svg>
-              </div>
-              <div class="col-md-10">
-                <div class="card-body p-0">
-                  <h5>100% secure payment</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="row justify-content-center row-cols-1 row-cols-sm-3 row-cols-lg-5">
         <div class="col">
           <div class="card mb-3 border-0">
             <div class="row">
@@ -1133,15 +1070,16 @@ style="background-color: grey; color: white;" @endif>
                     d="M22 5H2a1 1 0 0 0-1 1v4a3 3 0 0 0 2 2.82V22a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9.18A3 3 0 0 0 23 10V6a1 1 0 0 0-1-1Zm-7 2h2v3a1 1 0 0 1-2 0Zm-4 0h2v3a1 1 0 0 1-2 0ZM7 7h2v3a1 1 0 0 1-2 0Zm-3 4a1 1 0 0 1-1-1V7h2v3a1 1 0 0 1-1 1Zm10 10h-4v-2a2 2 0 0 1 4 0Zm5 0h-3v-2a4 4 0 0 0-8 0v2H5v-8.18a3.17 3.17 0 0 0 1-.6a3 3 0 0 0 4 0a3 3 0 0 0 4 0a3 3 0 0 0 4 0a3.17 3.17 0 0 0 1 .6Zm2-11a1 1 0 0 1-2 0V7h2ZM4.3 3H20a1 1 0 0 0 0-2H4.3a1 1 0 0 0 0 2Z" />
                 </svg>
               </div>
-              <div class="col-md-10">
+              <div class="col-md-10 mx-auto">
                 <div class="card-body p-0">
-                  <h5>Quality guarantee</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                  <h5>Quality Guarantee</h5>
+                  <p class="card-text">Kami menyediakan produk segar dengan kualitas terbaik langsung dari petani terpercaya.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        
         <div class="col">
           <div class="card mb-3 border-0">
             <div class="row">
@@ -1151,15 +1089,16 @@ style="background-color: grey; color: white;" @endif>
                     d="M12 8.35a3.07 3.07 0 0 0-3.54.53a3 3 0 0 0 0 4.24L11.29 16a1 1 0 0 0 1.42 0l2.83-2.83a3 3 0 0 0 0-4.24A3.07 3.07 0 0 0 12 8.35Zm2.12 3.36L12 13.83l-2.12-2.12a1 1 0 0 1 0-1.42a1 1 0 0 1 1.41 0a1 1 0 0 0 1.42 0a1 1 0 0 1 1.41 0a1 1 0 0 1 0 1.42ZM12 2A10 10 0 0 0 2 12a9.89 9.89 0 0 0 2.26 6.33l-2 2a1 1 0 0 0-.21 1.09A1 1 0 0 0 3 22h9a10 10 0 0 0 0-20Zm0 18H5.41l.93-.93a1 1 0 0 0 0-1.41A8 8 0 1 1 12 20Z" />
                 </svg>
               </div>
-              <div class="col-md-10">
+              <div class="col-md-10 mx-auto">
                 <div class="card-body p-0">
-                  <h5>guaranteed savings</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                  <h5>Guaranteed Savings</h5>
+                  <p class="card-text">Dapatkan harga terbaik dengan diskon menarik untuk produk pertanian segar setiap hari.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        
         <div class="col">
           <div class="card mb-3 border-0">
             <div class="row">
@@ -1169,18 +1108,21 @@ style="background-color: grey; color: white;" @endif>
                     d="M18 7h-.35A3.45 3.45 0 0 0 18 5.5a3.49 3.49 0 0 0-6-2.44A3.49 3.49 0 0 0 6 5.5A3.45 3.45 0 0 0 6.35 7H6a3 3 0 0 0-3 3v2a1 1 0 0 0 1 1h1v6a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-6h1a1 1 0 0 0 1-1v-2a3 3 0 0 0-3-3Zm-7 13H8a1 1 0 0 1-1-1v-6h4Zm0-9H5v-1a1 1 0 0 1 1-1h5Zm0-4H9.5A1.5 1.5 0 1 1 11 5.5Zm2-1.5A1.5 1.5 0 1 1 14.5 7H13ZM17 19a1 1 0 0 1-1 1h-3v-7h4Zm2-8h-6V9h5a1 1 0 0 1 1 1Z" />
                 </svg>
               </div>
-              <div class="col-md-10">
+              <div class="col-md-10 mx-auto">
                 <div class="card-body p-0">
-                  <h5>Daily offers</h5>
-                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                  <h5>Daily Offers</h5>
+                  <p class="card-text">Nikmati penawaran spesial setiap hari untuk produk pertanian berkualitas tinggi.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+  
       </div>
     </div>
   </section>
+  
+  
 
 
 
@@ -1239,92 +1181,6 @@ style="background-color: grey; color: white;" @endif>
           </div>
         </div>
 
-        <div class="col-md-2 col-sm-6">
-          <div class="footer-menu">
-            <h5 class="widget-title">Ultras</h5>
-            <ul class="menu-list list-unstyled">
-              <li class="menu-item">
-                <a href="#" class="nav-link">About us</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Conditions </a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Our Journals</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Careers</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Affiliate Programme</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Ultras Press</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-2 col-sm-6">
-          <div class="footer-menu">
-            <h5 class="widget-title">Customer Service</h5>
-            <ul class="menu-list list-unstyled">
-              <li class="menu-item">
-                <a href="#" class="nav-link">FAQ</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Contact</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Privacy Policy</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Returns & Refunds</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Cookie Guidelines</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Delivery Information</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-2 col-sm-6">
-          <div class="footer-menu">
-            <h5 class="widget-title">Customer Service</h5>
-            <ul class="menu-list list-unstyled">
-              <li class="menu-item">
-                <a href="#" class="nav-link">FAQ</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Contact</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Privacy Policy</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Returns & Refunds</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Cookie Guidelines</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Delivery Information</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-6">
-          <div class="footer-menu">
-            <h5 class="widget-title">Subscribe Us</h5>
-            <p>Subscribe to our newsletter to get updates about our grand offers.</p>
-            <form class="d-flex mt-3 gap-0" role="newsletter">
-              <input class="form-control rounded-start rounded-0 bg-light" type="email" placeholder="Email Address"
-                aria-label="Email Address">
-              <button class="btn btn-dark rounded-end rounded-0" type="submit">Subscribe</button>
-            </form>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -1373,37 +1229,38 @@ style="background-color: grey; color: white;" @endif>
               // Display products if found
               data.produkAll.forEach(product => {
                 const productCard = `
-              <div class="col mb-4">
-                <div class="product-item card shadow-sm produk-item">
-                  <a href="/produk/${product.id_produk}" title="${product.nama_produk}" class="product-link" style="text-decoration: none;">
-                    <figure style="width: 100%; overflow: hidden;">
-                      <img src="/storage/${product.foto}" alt="${product.nama_produk}" class="tab-image" style="width: 100%; height: 100%; object-fit: cover;">
-                    </figure>
-                    <div class="product-details p-3">
-                      <h3>${product.nama_produk}</h3>
-                      <span class="qty">Stok: ${product.stok}</span>
-                      <span class="rating">
-                        <svg width="24" height="24" class="text-primary">
-                          <use xlink:href="#star-solid"></use>
-                        </svg>
-                        4.5
-                      </span>
-                      <span class="price">RP. ${new Intl.NumberFormat().format(product.harga_produk)}</span>
-                      <span>${product.user.username || 'Tidak diketahui'}</span>
-                    </div>
-                  </a>
-                  <div class="d-flex justify-content-between mt-2">
-                    <form action="/keranjang/tambah/${product.id_produk}" method="POST">
-                      <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
-                      <button type="submit" class="btn btn-primary w-100">
-                        <span>+ Keranjang</span>
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>`;
+                    <div class="col mb-4">
+                      <div class="product-item card shadow-sm produk-item">
+                        <a href="/produk/${product.id_produk}" title="${product.nama_produk}" class="product-link" style="text-decoration: none;">
+                          <figure style="width: 100%; overflow: hidden;">
+                            <img src="/storage/${product.foto}" alt="${product.nama_produk}" class="tab-image" style="width: 100%; height: 100%; object-fit: cover;">
+                          </figure>
+                          <div class="product-details p-3">
+                            <h3>${product.nama_produk}</h3>
+                            <span class="qty">Stok: ${product.stok}</span> 
+                            <span class="qty">ID: ${product.id_produk}</span> 
+                            <span class="rating">
+                              <svg width="24" height="24" class="text-primary"></svg>
+                            </span>
+                            <span class="price">RP. ${new Intl.NumberFormat().format(product.harga_produk)}</span>
+                            <span>${product.user?.username || 'Tidak diketahui'}</span>
+                          </div>
+                        </a>
+                        <div class="d-flex justify-content-between mt-2">
+                         <form action="/keranjang/tambah-db/${product.id_produk}" method="POST" class="w-100">
+                          @csrf
+                          <input type="hidden" name="id_produk" value="${product.id_produk}">
+                          <button type="submit" class="btn btn-primary w-100 text-center">
+                            <span>+ Keranjang</span>
+                          </button>
+                        </form>
+
+                        </div>
+                      </div>
+                    </div>`;
                 resultsContainer.innerHTML += productCard;
               });
+
             }
           })
           .catch(error => {
@@ -1416,8 +1273,6 @@ style="background-color: grey; color: white;" @endif>
         document.getElementById('search-results').style.display = 'none';
       }
     });
-
-
 
 
   </script>
@@ -1655,6 +1510,17 @@ style="background-color: grey; color: white;" @endif>
               .then((response) => response.json())
               .then((data) => {
                 if (data.success) {
+                    // Menghapus item dari tampilan
+                    selectedIds.forEach(id => removeItemFromCart(id));
+                    
+                    // Menampilkan alert sukses
+                    let successMessage = document.createElement("div");
+                    successMessage.classList.add("alert", "alert-success", "alert-custom");
+                    successMessage.innerText = "Item berhasil dihapus.";
+                    document.body.appendChild(successMessage);
+                    // Update total secara langsung
+                    updateTotal();
+                    updateCartBadge()
 
                 } else {
                   alert("Gagal menghapus item. Silakan coba lagi.");
@@ -1668,6 +1534,50 @@ style="background-color: grey; color: white;" @endif>
         }
       });
     });
+    function updateTotal() {
+      let total = 0;
+      
+      // Loop melalui setiap checkbox yang dipilih dan jumlahkan harga yang relevan
+      document.querySelectorAll('.select-item:checked').forEach(item => {
+        const harga = parseFloat(item.getAttribute('data-harga'));
+        const jumlah = parseInt(item.getAttribute('data-jumlah'));
+        total += harga * jumlah;
+      });
+      
+      // Update total di tampilan
+      document.getElementById('total').textContent = "RP. " + total.toLocaleString();
+    }
+    function removeItemFromCart(idKeranjang) {
+      // Cari elemen list item yang sesuai dengan id_keranjang
+      const itemElement = document.querySelector(`.select-item[data-id='${idKeranjang}']`);
+      
+      if (itemElement) {
+        // Hapus elemen list item yang terpilih
+        const listItem = itemElement.closest('li');
+        listItem.remove();
+        
+        // Update total jika diperlukan
+        updateTotal();
+      }
+    }
+    function updateCartBadge() {
+      // Ambil semua elemen checkbox yang dipilih
+      const selectedItems = document.querySelectorAll('.select-item');
+      const cartItemCount = selectedItems.length;
+
+      // Cari elemen badge dan perbarui teksnya
+      const badge = document.querySelector('.badge');
+      if (badge) {
+        // Jika badge ditemukan, perbarui jumlah
+        if (cartItemCount > 0) {
+          badge.textContent = cartItemCount;
+          badge.style.display = 'inline'; // Pastikan badge terlihat
+        } else {
+          badge.style.display = 'none'; // Sembunyikan badge jika tidak ada item
+        }
+      }
+    }
+
 
 
     document.querySelectorAll('.btn-success').forEach(button => {
@@ -1886,77 +1796,8 @@ style="background-color: grey; color: white;" @endif>
       }
     });
 
-    // Tombol untuk pencarian berdasarkan lokasi
-    // document.getElementById('searchLocationBtn').addEventListener('click', function () {
-    //   if (marker) {
-    //     const lat = marker.getLatLng().lat;
-    //     const lng = marker.getLatLng().lng;
-
-    //     console.log(`Lokasi dipilih: Latitude ${lat}, Longitude ${lng}, Radius: ${radiusValue} km`);
-
-    //     // Kirim data lokasi dan radius ke server untuk melakukan pencarian
-    //     fetch(`/search-by-location?latitude=${lat}&longitude=${lng}&radius=${radiusValue}`)
-    //       .then(response => {
-    //         if (!response.ok) {
-    //           throw new Error('Gagal memuat data. Status: ' + response.status);  // Menambahkan pengecekan status HTTP
-    //         }
-    //         return response.json();
-    //       })
-    //       .then(data => {
-    //         console.log('Data produk yang diterima:', data.produkAll);
-    //         // Tampilkan hasil pencarian berdasarkan lokasi dan radius
-    //         const searchResultsDiv = document.querySelector('#search-results .product-grid');
-    //         searchResultsDiv.innerHTML = ''; // Clear hasil sebelumnya
-
-    //         if (data.produkAll && data.produkAll.length > 0) {
-    //           data.produkAll.forEach(product => {
-    //             const productCard = `
-    //           <div class="col mb-4">
-    //             <div class="product-item card shadow-sm produk-item">
-    //               <a href="/produk/${product.id_produk}" title="${product.nama_produk}" class="product-link" style="text-decoration: none;">
-    //                 <figure style="width: 100%; overflow: hidden;">
-    //                   <img src="/storage/${product.foto}" alt="${product.nama_produk}" class="tab-image" style="width: 100%; height: 100%; object-fit: cover;">
-    //                 </figure>
-    //                 <div class="product-details p-3">
-    //                   <h3>${product.nama_produk}</h3>
-    //                   <span class="qty">Stok: ${product.stok}</span>
-    //                   <span class="rating">
-    //                     <svg width="24" height="24" class="text-primary">
-    //                       <use xlink:href="#star-solid"></use>
-    //                     </svg>
-    //                     4.5
-    //                   </span>
-    //                   <span class="price">RP. ${new Intl.NumberFormat().format(product.harga_produk)}</span>
-    //                   <span>${product.user.username || 'Tidak diketahui'}</span>
-    //                 </div>
-    //               </a>
-    //               <div class="d-flex justify-content-between mt-2">
-    //                 <form action="/keranjang/tambah/${product.id_produk}" method="POST">
-    //                   <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
-    //                   <button type="submit" class="btn btn-primary w-100">
-    //                     <span>+ Keranjang</span>
-    //                   </button>
-    //                 </form>
-    //               </div>
-    //             </div>
-    //           </div>`;
-    //             searchResultsDiv.innerHTML += productCard;
-    //           });
-    //         } else {
-    //           searchResultsDiv.textContent = 'Tidak ada produk ditemukan dalam radius ini.';
-    //         }
-    //       })
-    //       .catch(error => {
-    //         console.error('Terjadi kesalahan:', error);
-    //         alert('Gagal melakukan pencarian berdasarkan lokasi.');
-    //       });
-
-    //   } else {
-    //     alert("Silakan pilih lokasi pada peta terlebih dahulu.");
-    //   }
-    // });
     document.getElementById('searchLocationBtn').addEventListener('click', function () {
-    if (marker) {
+      if (marker) {
         const lat = marker.getLatLng().lat;
         const lng = marker.getLatLng().lng;
 
@@ -1964,21 +1805,21 @@ style="background-color: grey; color: white;" @endif>
 
         // Kirim data lokasi dan radius ke server untuk melakukan pencarian
         fetch(`/search-by-location?latitude=${lat}&longitude=${lng}&radius=${radiusValue}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Gagal memuat data. Status: ' + response.status);  // Menambahkan pengecekan status HTTP
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Data produk yang diterima:', data.produkAll);
-                // Tampilkan hasil pencarian berdasarkan lokasi dan radius
-                const searchResultsDiv = document.querySelector('#search-results .product-grid');
-                searchResultsDiv.innerHTML = ''; // Clear hasil sebelumnya
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Gagal memuat data. Status: ' + response.status);  // Menambahkan pengecekan status HTTP
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Data produk yang diterima:', data.produkAll);
+            // Tampilkan hasil pencarian berdasarkan lokasi dan radius
+            const searchResultsDiv = document.querySelector('#search-results .product-grid');
+            searchResultsDiv.innerHTML = ''; // Clear hasil sebelumnya
 
-                if (data.produkAll && data.produkAll.length > 0) {
-                    data.produkAll.forEach(product => {
-                        const productCard = `
+            if (data.produkAll && data.produkAll.length > 0) {
+              data.produkAll.forEach(product => {
+                const productCard = `
                             <div class="col mb-4">
                                 <div class="product-item card shadow-sm produk-item">
                                     <a href="/produk/${product.id_produk}" title="${product.nama_produk}" class="product-link" style="text-decoration: none;">
@@ -1989,10 +1830,8 @@ style="background-color: grey; color: white;" @endif>
                                             <h3>${product.nama_produk}</h3>
                                             <span class="qty">Stok: ${product.stok}</span>
                                             <span class="rating">
-                                                <svg width="24" height="24" class="text-primary">
-                                                    <use xlink:href="#star-solid"></use>
-                                                </svg>
-                                                4.5
+                                                <svg width="24" height="24" class="text-primary">                                            
+                                                </svg>                                  
                                             </span>
                                             <span class="price">RP. ${new Intl.NumberFormat().format(product.harga_produk)}</span>
                                             <span>${product.user.username || 'Tidak diketahui'}</span>
@@ -2008,26 +1847,26 @@ style="background-color: grey; color: white;" @endif>
                                     </div>
                                 </div>
                             </div>`;
-                        searchResultsDiv.innerHTML += productCard;
-                    });
-                } else {
-                    searchResultsDiv.textContent = 'Tidak ada produk ditemukan dalam radius ini.';
-                }
+                searchResultsDiv.innerHTML += productCard;
+              });
+            } else {
+              searchResultsDiv.textContent = 'Tidak ada produk ditemukan dalam radius ini.';
+            }
 
-                // Tutup modal setelah pencarian selesai
-                $('#searchLocationModal').modal('hide');
+            // Tutup modal setelah pencarian selesai
+            $('#searchLocationModal').modal('hide');
 
-                // Sembunyikan elemen di dalam #banner-section
-                document.querySelector('#banner-section').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Terjadi kesalahan:', error);
-                alert('Gagal melakukan pencarian berdasarkan lokasi.');
-            });
-    } else {
+            // Sembunyikan elemen di dalam #banner-section
+            document.querySelector('#banner-section').style.display = 'none';
+          })
+          .catch(error => {
+            console.error('Terjadi kesalahan:', error);
+            alert('Gagal melakukan pencarian berdasarkan lokasi.');
+          });
+      } else {
         alert("Silakan pilih lokasi pada peta terlebih dahulu.");
-    }
-});
+      }
+    });
 
 
 

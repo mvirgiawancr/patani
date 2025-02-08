@@ -8,57 +8,49 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pesanan;
 use App\Models\Alamat;
-use App\Models\DetailPesanan;
+use App\Models\user;
+use Illuminate\Support\Facades\Log;
+
 
 class ProdukController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data produk yang dimiliki oleh user yang sedang login
-        $produk = Produk::where('id_user', Auth::id())->get();
+        // Ambil ID user yang sedang login
+        $idUser = Auth::id();
 
-        // Mengambil pesanan yang terkait dengan id_penjual sama dengan user yang sedang login
-        $pesanan = Pesanan::with(['detailPesanan.produk', 'pembeli.alamat']) // Eager load alamat di pembeli
-            ->where('id_penjual', Auth::id()) // Filter berdasarkan id_penjual
-            ->where('status', '!=', 'menunggu pembayaran') // Tambahkan kondisi untuk status
-            ->orderByRaw("CASE WHEN status = 'selesai' THEN 1 ELSE 0 END") // Urutkan status selesai paling akhir
-            ->latest() // Urutkan berdasarkan pesanan terbaru (kecuali yang selesai)
+        // Ambil query pencarian (jika ada)
+        $query = $request->query('query');
+
+        // Ambil produk yang hanya dimiliki oleh petani (user) yang sedang login
+        $produk = Produk::where('id_user', $idUser) // Pastikan hanya produk milik user login
+            ->when($query, function ($q) use ($query) {
+                return $q->where('nama_produk', 'LIKE', '%' . $query . '%');
+            })
             ->get();
 
+        // Ambil pesanan yang terkait dengan user yang login
+        $pesanan = Pesanan::with(['detailPesanan.produk', 'pembeli.alamat'])
+            ->where('id_penjual', $idUser)
+            ->where('status', '!=', 'menunggu pembayaran')
+            ->orderByRaw("CASE WHEN status = 'selesai' THEN 1 ELSE 0 END")
+            ->latest()
+            ->get();
+
+        // Jika permintaan dari AJAX, kembalikan JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'produk' => $produk,  // Pastikan hanya produk dari user yang login
+            ]);
+        }
 
 
-        // Mengirimkan data produk dan pesanan ke view
+        // Kirim data ke view
         return view('petani', compact('produk', 'pesanan'));
     }
 
-    public function store(Request $request)
-    {
-        // Validasi data
-        $validated = $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'harga_produk' => 'required|numeric',
-            'deskripsi' => 'nullable|string',
-            'stok' => 'required|integer',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Foto wajib
-        ]);
 
-        // Tangani foto jika ada
-        if ($request->hasFile('foto')) {
-            $fileName = time() . '_' . $request->file('foto')->getClientOriginalName();
-            $path = $request->file('foto')->storeAs('produk_images', $fileName, 'public');
-            $validated['foto'] = $path;  // Simpan path foto
-        }
-
-        // Tambahkan id_user secara dinamis
-        $validated['id_user'] = Auth::id(); // Ambil id_user yang sedang login
-
-        // Simpan data ke dalam database
-        Produk::create($validated);
-
-        // Redirect kembali ke laman /petani dengan flash message
-        return redirect('/petani')->with('success', 'Produk berhasil ditambahkan!');
-    }
 
 
     public function edit($id)
@@ -132,12 +124,20 @@ class ProdukController extends Controller
     // Menampilkan detail produk
     public function show($id)
     {
-        // Mengambil data produk berdasarkan ID
-        $produk = Produk::findOrFail($id);
-
+        // Mengambil data produk berdasarkan ID dengan eager loading relasi user dan alamat
+        $produk = Produk::with('user.alamat')->findOrFail($id);
+        // Menulis log untuk mencatat data produk yang ditemukan
+        Log::info("Produk ditemukan", [
+            'produk_id' => $produk->id_produk,
+            'produk_nama' => $produk->nama_produk,
+            'user_id' => $produk->user->id_user,
+            'alamat_latitude' => $produk->user->alamat->latitude,
+            'alamat_longitude' => $produk->user->alamat->longitude
+        ]);
         // Mengirimkan data produk ke view
         return view('show', compact('produk'));
     }
+
 
     public function updateResi(Request $request, $idPesanan)
     {
@@ -240,6 +240,32 @@ class ProdukController extends Controller
         return view('home', compact('produk'));
     }
 
+    public function cari(Request $request)
+    {
+        $query = $request->query('query'); // Ambil query dari request
+        $produkAll = Produk::with('user')
+            ->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . strtolower($query) . '%']) // Filter berdasarkan nama produk
+            ->get();
+        \Log::info("fungsi pencarian biasa aktif");
+
+        return response()->json([
+            'produkAll' => $produkAll,
+        ]);
+    }
+
+
+    public function cariPetani(Request $request)
+    {
+        $query = $request->query('query'); // Ambil query dari request
+        $produkAll = Produk::with('user')
+            ->where('id_user', Auth::id()) // Tambahkan filter ID pengguna
+            ->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . strtolower($query) . '%'])
+            ->get();
+
+        return response()->json([
+            'produkAll' => $produkAll,
+        ]);
+    }
 
 
 

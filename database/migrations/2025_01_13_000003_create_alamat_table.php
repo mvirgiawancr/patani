@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('alamats', function (Blueprint $table) {
             $table->id('id_alamat');
-            $table->string('kordinat');
             $table->text('alamat_lengkap');
             $table->string('kecamatan');
             $table->string('kota');
             $table->timestamps();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
         });
     }
 

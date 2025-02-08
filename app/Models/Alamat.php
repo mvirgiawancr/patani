@@ -27,7 +27,6 @@ class Alamat extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'kordinat',
         'latitude',
         'longitude',
         'alamat_lengkap',

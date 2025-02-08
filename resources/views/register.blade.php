@@ -8,8 +8,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="css/vendor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="css/vendor.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
 </head>
 <style>
     .alert-custom {
@@ -93,7 +107,7 @@
                         alt="Foto Profil"
                         style="width: 150px; height: 150px; border-radius: 50%; border: 2px solid #ccc; object-fit: cover;">
                     <label for="profilePicture"
-                        style="position: absolute; bottom: 0; right: 0; background-color: #f8f9fa; border-radius: 50%; padding: 8px; cursor: pointer; border: 1px solid #ccc;">
+                        style="position: absolute; bottom: 0; right: 0; background-color: #f8f9fa; border-radius: 50%; padding: 8px; cursor: pointer; width:50px; border: 1px solid #ccc;">
                         <i class="bi bi-camera-fill"></i>
                         <input type="file" id="profilePicture" name="profile_picture" accept="image/*"
                             style="display: none;" onchange="previewProfilePicture(event)">
@@ -124,13 +138,6 @@
                 <label for="alamat_lengkap">Alamat Lengkap</label>
                 <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" required rows="4"></textarea>
             </div>
-            <!-- Tombol Set Lokasi -->
-            <div class="form-group">
-                <button type="button" id="setLocationButton" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#setLocationModal">
-                    Set Lokasi
-                </button>
-            </div>
             <div>
                 <input type="hidden" name="latitude" id="formLatitude">
                 <input type="hidden" name="longitude" id="formLongitude">
@@ -143,6 +150,13 @@
             <div class="form-group">
                 <label for="kota">Kota</label>
                 <input type="text" class="form-control" id="kota" name="kota" required>
+            </div>
+            <!-- Tombol Set Lokasi -->
+            <div class="form-group">
+                <button type="button" id="setLocationButton" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#setLocationModal">
+                    Set Lokasi
+                </button>
             </div>
 
             <!-- Pilihan Role -->
@@ -178,9 +192,9 @@
                 <!-- Input Latitude dan Longitude -->
                 <div class="mt-3">
                     <label for="latitude" class="form-label">Latitude</label>
-                    <input type="text" id="latitude" class="form-control" readonly required>
+                    <input type="hidden" id="latitude" class="form-control" readonly required>
                     <label for="longitude" class="form-label mt-2">Longitude</label>
-                    <input type="text" id="longitude" class="form-control" readonly required>
+                    <input type="hidden" id="longitude" class="form-control" readonly required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -195,7 +209,6 @@
 
 <!-- Memastikan jQuery dipanggil terlebih dahulu -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <!-- Bootstrap JS dan Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>

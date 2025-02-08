@@ -221,7 +221,7 @@ body {
 }
 .btn-success {
   --bs-btn-color: #222;
-  --bs-btn-bg: #EEF5E4;
+  --bs-btn-bg: #d6f0ce;
   --bs-btn-border-color: #EEF5E4;
   --bs-btn-hover-color: #222;
   --bs-btn-hover-bg: #9de3c2;
@@ -234,6 +234,23 @@ body {
   --bs-btn-disabled-color: #222;
   --bs-btn-disabled-bg: #EEF5E4;
   --bs-btn-disabled-border-color: #EEF5E4;
+}
+.btn-outline-success {
+  --bs-btn-color: #469449;
+  --bs-btn-border-color: #d6f0ce;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #d6f0ce;
+  --bs-btn-hover-border-color: #EFEFEF;
+  --bs-btn-focus-shadow-rgb: 248,249,250;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: #EFEFEF;
+  --bs-btn-active-border-color: #EFEFEF;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #EFEFEF;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #EFEFEF;
+  --bs-gradient: none;
+  border-width: 2px; /* Menambahkan ketebalan border */
 }
 .btn-danger {
   --bs-btn-color: #222;

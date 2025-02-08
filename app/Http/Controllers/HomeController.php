@@ -19,7 +19,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $user_id = auth()->id();
-    
+
         // Keranjang Items
         $keranjangItems = [];
         if ($user_id) {
@@ -27,20 +27,20 @@ class HomeController extends Controller
                 ->with('produk')
                 ->get();
         }
-    
+
         // Tangkap parameter pencarian
         $query = $request->query('query'); // Nama produk
         $latitude = $request->query('latitude'); // Latitude pengguna
         $longitude = $request->query('longitude'); // Longitude pengguna
         $radius = $request->query('radius', 10); // Radius pencarian dalam kilometer (default 10 km)
-    
+
         // Query produk
         $produkAll = Produk::with('user.alamat');
-    
+
         if ($query) {
             $produkAll = $produkAll->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . strtolower($query) . '%']);
         }
-    
+
         if ($latitude && $longitude) {
             $produkAll = $produkAll->whereHas('user.alamat', function ($query) use ($latitude, $longitude, $radius) {
                 $query->whereRaw("
@@ -52,25 +52,25 @@ class HomeController extends Controller
                 ", [$latitude, $longitude, $latitude, $radius]);
             });
         }
-    
-        $produkAll = $produkAll->get();
-    
 
-    
+        $produkAll = $produkAll->get();
+
+
+
         // Tangani permintaan AJAX
         if ($request->ajax()) {
             return response()->json([
                 'produkAll' => $produkAll,
             ]);
         }
-    
+
         // Data lain
         $orders = Pesanan::with('penjual', 'detailPesanan.produk')
             ->where('id_pembeli', $user_id)
             ->orderByRaw("CASE WHEN status = 'selesai' THEN 1 ELSE 0 END")
             ->latest()
             ->get();
-    
+
         $penjualLokasi = User::with('alamat')
             ->whereHas('produk')
             ->get()
@@ -81,11 +81,11 @@ class HomeController extends Controller
                     'longitude' => $user->alamat->longitude ?? null,
                 ];
             });
-    
+
         return view('home', compact('produkAll', 'keranjangItems', 'orders', 'penjualLokasi'));
     }
-    
-    
+
+
 
 
 
@@ -113,6 +113,8 @@ class HomeController extends Controller
             session()->flash('error', 'Stok produk tidak cukup!');
             return redirect()->route('home');
         }
+
+        \Log::info('User ID, Produk:', ['produk' => $produk->toArray()]);
 
         // Menambah produk ke keranjang jika belum ada, atau memperbarui jumlah jika sudah ada
         $keranjang = Keranjang::where('id_user', $user_id)
@@ -255,8 +257,11 @@ class HomeController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error("Checkout failed: " . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat checkout. Silakan coba lagi.');
+            // Menangkap pesan error lebih rinci dari exception
+            $errorMessage = "Terjadi kesalahan saat checkout. Error: " . $e->getMessage();
+
+            // Mengirim pesan error yang lebih spesifik
+            return back()->with('error', $errorMessage);
         }
     }
 
@@ -329,6 +334,14 @@ class HomeController extends Controller
     }
 
 
+    /*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Delete items from the shopping cart based on the given IDs.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /******  5ed5aad2-42e7-4de2-a08a-dd8e455648bb  *******/
     public function deleteKeranjang(Request $request)
     {
         try {
@@ -425,83 +438,83 @@ class HomeController extends Controller
 
 
     public function cari(Request $request)
-        {
-            $query = $request->query('query'); // Ambil query dari request
-            $produkAll = Produk::with('user')
-                ->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . strtolower($query) . '%']) // Filter berdasarkan nama produk
-                ->get();
-            \Log::info("fungsi pencarian biasa aktif");
-        
-            return response()->json([
-                'produkAll' => $produkAll,
-            ]);
-        }
-        public function searchByLocation(Request $request)
-        {
-            // Ambil parameter dari request
-            $latitude = $request->input('latitude');
-            $longitude = $request->input('longitude');
-            $radius = $request->input('radius', 1); // Default radius 1 km
-            // Log hasil pencarian
-            \Log::info('Latitude: ' . $latitude . ', Longitude: ' . $longitude . ', Radius: ' . $radius);
+    {
+        $query = $request->query('query'); // Ambil query dari request
+        $produkAll = Produk::with('user')
+            ->whereRaw('LOWER(nama_produk) LIKE ?', ['%' . strtolower($query) . '%']) // Filter berdasarkan nama produk
+            ->get();
+        \Log::info("fungsi pencarian biasa aktif");
 
-    
-            if (!$latitude || !$longitude) {
-                return response()->json(['error' => 'Koordinat lokasi tidak valid'], 400);
-            }
-    
-            // Mengambil data alamat penjual dan menghitung jarak berdasarkan lokasi yang dipilih
-            $penjualLokasi = User::join('alamats', 'alamats.id_alamat', '=', 'users.id_alamat')
-                ->select('users.id_user', 'alamats.latitude', 'alamats.longitude', 'users.username')
-                ->get()
-                ->map(function ($penjual) use ($latitude, $longitude, $radius) {
-                    // Hitung jarak menggunakan Haversine Formula
-                    $distance = $this->haversine($latitude, $longitude, $penjual->latitude, $penjual->longitude);
-    
-                    // Menyaring penjual yang berada dalam radius yang ditentukan
-                    if ($distance <= $radius) {
-                        $penjual->distance = $distance;
-                        return $penjual;
-                    }
-                })
-                ->filter()
-                ->values();
-    
-            // Ambil produk-produk dari penjual yang berada dalam radius
-            $produkAll = Produk::whereIn('id_user', $penjualLokasi->pluck('id_user'))
-                ->with('user')
-                ->get();
-                \Log::info('produk dari penjual di radius'.$produkAll);
-    
-            return response()->json([
-                'produkAll' => $produkAll,
-                'penjualLokasi' => $penjualLokasi
-            ]);
-        }
-    
-        // Fungsi untuk menghitung jarak menggunakan Haversine formula (dalam kilometer)
-        private function haversine($lat1, $lon1, $lat2, $lon2)
-        {
-            $earthRadius = 6371; // Radius bumi dalam kilometer
-    
-            // Konversi derajat ke radian
-            $lat1 = deg2rad($lat1);
-            $lon1 = deg2rad($lon1);
-            $lat2 = deg2rad($lat2);
-            $lon2 = deg2rad($lon2);
-    
-            // Hitung selisih koordinat
-            $dLat = $lat2 - $lat1;
-            $dLon = $lon2 - $lon1;
-    
-            // Haversine formula
-            $a = sin($dLat / 2) * sin($dLat / 2) + cos($lat1) * cos($lat2) * sin($dLon / 2) * sin($dLon / 2);
-            $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-    
-            // Hitung jarak
-            return $earthRadius * $c;
+        return response()->json([
+            'produkAll' => $produkAll,
+        ]);
+    }
+    public function searchByLocation(Request $request)
+    {
+        // Ambil parameter dari request
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+        $radius = $request->input('radius', 1); // Default radius 1 km
+        // Log hasil pencarian
+        \Log::info('Latitude: ' . $latitude . ', Longitude: ' . $longitude . ', Radius: ' . $radius);
+
+
+        if (!$latitude || !$longitude) {
+            return response()->json(['error' => 'Koordinat lokasi tidak valid'], 400);
         }
 
-    
+        // Mengambil data alamat penjual dan menghitung jarak berdasarkan lokasi yang dipilih
+        $penjualLokasi = User::join('alamats', 'alamats.id_alamat', '=', 'users.id_alamat')
+            ->select('users.id_user', 'alamats.latitude', 'alamats.longitude', 'users.username')
+            ->get()
+            ->map(function ($penjual) use ($latitude, $longitude, $radius) {
+                // Hitung jarak menggunakan Haversine Formula
+                $distance = $this->haversine($latitude, $longitude, $penjual->latitude, $penjual->longitude);
+
+                // Menyaring penjual yang berada dalam radius yang ditentukan
+                if ($distance <= $radius) {
+                    $penjual->distance = $distance;
+                    return $penjual;
+                }
+            })
+            ->filter()
+            ->values();
+
+        // Ambil produk-produk dari penjual yang berada dalam radius
+        $produkAll = Produk::whereIn('id_user', $penjualLokasi->pluck('id_user'))
+            ->with('user')
+            ->get();
+        \Log::info('produk dari penjual di radius' . $produkAll);
+
+        return response()->json([
+            'produkAll' => $produkAll,
+            'penjualLokasi' => $penjualLokasi
+        ]);
+    }
+
+    // Fungsi untuk menghitung jarak menggunakan Haversine formula (dalam kilometer)
+    private function haversine($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; // Radius bumi dalam kilometer
+
+        // Konversi derajat ke radian
+        $lat1 = deg2rad($lat1);
+        $lon1 = deg2rad($lon1);
+        $lat2 = deg2rad($lat2);
+        $lon2 = deg2rad($lon2);
+
+        // Hitung selisih koordinat
+        $dLat = $lat2 - $lat1;
+        $dLon = $lon2 - $lon1;
+
+        // Haversine formula
+        $a = sin($dLat / 2) * sin($dLat / 2) + cos($lat1) * cos($lat2) * sin($dLon / 2) * sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        // Hitung jarak
+        return $earthRadius * $c;
+    }
+
+
 
 }
