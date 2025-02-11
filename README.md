@@ -56,6 +56,3 @@ Aplikasi sekarang dapat diakses di `http://127.0.0.1:8000`.
 
 ## Kontribusi
 Jika Anda ingin berkontribusi pada proyek ini, silakan lakukan fork repository ini dan buat pull request dengan perubahan yang Anda usulkan.
-
-## Lisensi
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
