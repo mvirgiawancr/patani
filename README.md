@@ -13,7 +13,7 @@ Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini secara
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/username/patani.git
+git clone https://github.com/mvirgiawancr/patani.git
 cd patani
 ```
 
