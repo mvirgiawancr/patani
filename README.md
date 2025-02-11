@@ -2,12 +2,6 @@
 
 **Patani** adalah sebuah platform yang memudahkan pelanggan untuk membeli sayur dan buah-buahan langsung dari petani, memastikan produk yang lebih segar dan harga yang lebih kompetitif.
 
-## Fitur Utama
-- Pembelian sayur dan buah langsung dari petani
-- Pencarian produk berdasarkan kategori
-- Sistem pembayaran yang aman
-- Manajemen pesanan untuk pelanggan dan petani
-
 ## Instalasi
 Ikuti langkah-langkah berikut untuk menginstal dan menjalankan proyek ini secara lokal:
 
