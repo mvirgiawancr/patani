@@ -481,7 +481,7 @@
     </header>
 
 
-    <section id="search-results" class="py-5">
+    <section id="search-results">
     <div class="container-fluid">
       <div class="row">
       <div class="col-md-12">
@@ -503,49 +503,48 @@
             </div>
             </nav>
           </div>
+
           <div class="tab-content" id="produk-tabContent">
             <div class="tab-pane fade show active" id="produk-all" role="tabpanel" aria-labelledby="nav-all-tab">
-                <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-                    @foreach($produk as $item)
-                    @if($item->id_user == Auth::id())
-                        <div class="col mb-4">
-                            <div class="product-item card shadow-sm produk-item">
-                                <a href="{{ route('produk.show', $item->id_produk) }}" title="{{ $item->nama_produk }}"
-                                   class="product-link" style="text-decoration: none;">
-                                    <figure style="width: 100%; overflow: hidden;">
-                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_produk }}"
-                                             class="tab-image" style="width: 100%; height: 100%; object-fit: cover;">
-                                    </figure>
-                                    <div class="product-details p-3">
-                                        <h3>{{ $item->nama_produk }}</h3>
-                                        <span class="qty">Stok: {{ $item->stok }}</span>
-                                        <span class="rating">
-                                            <svg width="24" height="24" class="text-primary"></svg>
-                                        </span>
-                                        <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }}</span>
-                                        <span><i class="bi bi-person-fill"></i> {{ $item->user->username ?? 'Tidak diketahui' }}</span>
-                                    </div>
-                                </a>
-                                <div class="d-flex flex-column mt-2">
-                                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
-                                            data-bs-target="#editProductModal" onclick="openEditModal({{ $item->id_produk }})">
-                                        <span>Edit</span>
-                                    </button>
-                                    <form action="{{ route('produk.destroy', $item->id_produk) }}" method="POST"
-                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger w-100 mt-2">
-                                            <span>Hapus</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    @endforeach
-                </div>
+            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+              @foreach($produk as $item)
+          <div class="col">
+          <div class="product-item">
+          <figure>
+          <img src="{{ asset('storage/' . $item->foto) }}" class="tab-image product-image"
+            alt="{{ $item->nama_produk }}">
+          </figure>
+          <h3>{{ $item->nama_produk }}</h3>
+          <span class="qty">{{ $item->stok }} Unit</span>
+          <span class="rating">
+          <svg width="24" height="24" class="text-primary">
+            <use xlink:href="#star-solid"></use>
+          </svg>
+          4.5
+          </span>
+          <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }} /KG</span>
+          <div>
+          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
+            data-bs-target="#editProductModal" onclick="openEditModal({{ $item->id_produk }})">
+            <span>Edit</span>
+          </button>
+          <form action="{{ route('produk.destroy', $item->id_produk) }}" method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-outline-primary w-100 mb-2 mt-2">
+            <span>Hapus</span>
+            </button>
+          </form>
+          </div>
+          </div>
+          </div>
+        @endforeach
             </div>
+            </div>
+          </div>
+          </div>
+        </div>
         </div>
         
 
@@ -1134,11 +1133,6 @@
       console.error('Error:', error);
       alert('Terjadi kesalahan saat mengambil data produk.');
     });
-  });
-
-  // Tombol untuk mereset pencarian
-  document.getElementById('refresh-btn').addEventListener('click', function () {
-    location.reload();
   });
 </script>
 

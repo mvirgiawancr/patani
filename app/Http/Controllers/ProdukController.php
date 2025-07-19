@@ -267,9 +267,32 @@ class ProdukController extends Controller
         ]);
     }
 
+    public function store(Request $request)
+    {
+        // Validasi data
+        $validated = $request->validate([
+            'nama_produk' => 'required|string|max:255',
+            'harga_produk' => 'required|numeric',
+            'deskripsi' => 'nullable|string',
+            'stok' => 'required|integer',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Foto wajib
+        ]);
 
+        // Tangani foto jika ada
+        if ($request->hasFile('foto')) {
+            $fileName = time() . '_' . $request->file('foto')->getClientOriginalName();
+            $path = $request->file('foto')->storeAs('produk_images', $fileName, 'public');
+            $validated['foto'] = $path;  // Simpan path foto
+        }
+
+        // Tambahkan id_user secara dinamis
+        $validated['id_user'] = Auth::id(); // Ambil id_user yang sedang login
+
+        // Simpan data ke dalam database
+        Produk::create($validated);
+
+        // Redirect kembali ke laman /petani dengan flash message
+        return redirect('/petani')->with('success', 'Produk berhasil ditambahkan!');
+    }
 
 }
-
-
-
