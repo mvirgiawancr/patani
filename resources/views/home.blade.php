@@ -248,28 +248,32 @@ style="background-color: grey; color: white;" @endif>
       <div class="d-flex justify-content-between text-end mt-3">
         <span><strong>Total Harga: RP. {{ number_format($order->total_harga, 2) }}</strong></span>
         @if ($order->status === 'dikirim')
-      <button class="btn btn-success" onclick="confirmSelesaikanPesanan({{ $item->id_pesanan }})">
-      Selesaikan Pesanan
-      </button>
-    @endif
+        <button class="btn btn-success" onclick="confirmSelesaikanPesanan({{ $item->id_pesanan }})">
+          Selesaikan Pesanan
+        </button>
+        @endif
       </div>
 
       <!-- Tombol Unggah Bukti Pembayaran hanya jika status 'menunggu pembayaran' -->
       @if ($order->status === 'menunggu pembayaran')
       <button class="btn btn-success" data-bs-toggle="modal"
-      data-bs-target="#modalPembayaran{{ $order->id_pesanan }}">
-      Unggah Bukti Pembayaran
+        data-bs-target="#modalPembayaran{{ $order->id_pesanan }}">
+        Unggah Bukti Pembayaran
       </button>
-    @endif
-      </div>
-      </div>
-    @endforeach
-    @else
-    <p>Belum ada transaksi.</p>
-  @endif
-      </div>
+      <button class="btn btn-danger" data-bs-toggle="modal"
+        data-bs-target="#modalLihatMetodePembayaran{{ $order->id_pesanan }}">
+        Tampilkan metode pembayaran
+      </button>
+      @endif
     </div>
   </div>
+  @endforeach
+  @else
+  <p>Belum ada transaksi.</p>
+  @endif
+</div>
+</div>
+</div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const produkGroups = document.querySelectorAll('.card');
@@ -563,6 +567,35 @@ style="background-color: grey; color: white;" @endif>
     </div>
   @endforeach
   <!-- akhir Modal Pembayaran -->
+  
+  <!-- Awal Modal Metode Pembayaran -->
+  @foreach ($orders as $order)
+  <div class="modal fade" id="modalLihatMetodePembayaran{{ $order->id_pesanan }}" tabindex="-1" aria-labelledby="modalLihatMetodePembayaranLabel{{ $order->id_pesanan }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalLihatMetodePembayaranLabel{{ $order->id_pesanan }}">Metode Pembayaran Penjual</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          {{-- Pastikan relasi 'penjual' sudah di-load dan penjual sudah upload QRIS --}}
+          @if ($order->penjual && $order->penjual->metode_pembayaran)
+          <p>Silakan lakukan pembayaran dengan memindai kode QRIS di bawah ini.</p>
+          <img src="{{ asset('storage/' . $order->penjual->metode_pembayaran) }}" alt="Metode Pembayaran QRIS" class="img-fluid rounded">
+          @else
+          <p class="text-muted">Penjual belum mengunggah metode pembayaran.</p>
+          @endif
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  @endforeach
+  <!-- Akhir Modal Metode Pembayaran -->
 
   <!-- Modal Cari Berdasarkan Lokasi -->
   <div class="modal fade" id="searchLocationModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
@@ -716,7 +749,19 @@ style="background-color: grey; color: white;" @endif>
             data-bs-toggle="offcanvas" data-bs-target="#orderNotificationModal"
             aria-controls="orderNotificationModal">
             <a href="#" class="rounded-circle bg-light p-2 mx-1">
-              <i class="bi bi-bell-fill" style="font-size: 30px;"></i>
+              <i class="bi bi-bell-fill" style="font-size: 30px; position: relative;">
+                {{-- Ini adalah kode yang ditambahkan untuk badge notifikasi --}}
+                {{-- Cek apakah ada pesanan yang statusnya BUKAN 'selesai' --}}
+                @if($orders && $orders->where('status', '!==', 'selesai')->count() > 0)
+                  <span class="position-absolute top-0 start-100 translate-middle badge text-light"
+                    style="background-color: rgb(255, 0, 0); font-size: 12px; padding: 0.2rem 0.4rem; border-radius: 50%; font-style: normal;">
+                    
+                    {{-- Hitung hanya pesanan yang statusnya BUKAN 'selesai' --}}
+                    {{ $orders->where('status', '!==', 'selesai')->count() }}
+              
+                  </span>
+                @endif
+              </i>
             </a>
             </button>
           </li>

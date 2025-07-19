@@ -294,5 +294,36 @@ class ProdukController extends Controller
         // Redirect kembali ke laman /petani dengan flash message
         return redirect('/petani')->with('success', 'Produk berhasil ditambahkan!');
     }
+    public function uploadQris(Request $request)
+    {
+        // 1. Validasi request: pastikan ada file dan formatnya gambar
+        $request->validate([
+            'qris_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Wajib, format gambar, maks 2MB
+        ]);
+
+        // 2. Dapatkan data user yang sedang login
+        $user = Auth::user();
+
+        // 3. Proses penyimpanan file
+        if ($request->hasFile('qris_image')) {
+
+            // Cek apakah user sudah punya gambar QRIS sebelumnya
+            // Jika ada, hapus file lama untuk menghemat storage
+            if ($user->metode_pembayaran && Storage::disk('public')->exists($user->metode_pembayaran)) {
+                Storage::disk('public')->delete($user->metode_pembayaran);
+            }
+
+            // Simpan file baru ke folder public/metode_pembayaran
+            // Laravel akan otomatis membuat nama file unik
+            $path = $request->file('qris_image')->store('metode_pembayaran', 'public');
+
+            // 4. Update kolom di database dengan path file yang baru
+            $user->metode_pembayaran = $path;
+            $user->save();
+        }
+
+        // 5. Redirect kembali ke halaman petani dengan pesan sukses
+        return redirect('/petani')->with('success', 'Metode pembayaran QRIS berhasil diperbarui!');
+    }
 
 }

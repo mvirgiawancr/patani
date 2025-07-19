@@ -365,6 +365,51 @@
       </div>
     </div>
   </div>
+  <!-- Modal Metode Pembayaran -->
+<div class="modal fade" id="ModalMetodePembayaran" tabindex="-1" aria-labelledby="metodePembayaranLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="metodePembayaranLabel">Metode Pembayaran</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form action="{{ route('qris.upload') }}" method="POST" enctype="multipart/form-data">
+                  @csrf
+                  
+            <div class="mb-3 text-center">
+  <label for="qris_preview" class="form-label"><strong>Preview QRIS</strong></label>
+    <div id="qris-preview-container">
+            {{-- Cek apakah user yang login punya data di kolom 'metode_pembayaran' --}}
+            @if(Auth::user()->metode_pembayaran)
+                {{-- Jika ada, tampilkan gambar dari storage --}}
+                <img id="qris_preview_image" src="{{ asset('storage/' . Auth::user()->metode_pembayaran) }}" alt="QRIS Preview" class="img-fluid rounded" style="max-height: 300px;">
+                <p id="qris_belum_di_upload" class="text-muted" style="display: none;">QRIS belum di-upload.</p>
+            @else
+                {{-- Jika tidak ada, tampilkan pesan --}}
+                <p id="qris_belum_di_upload" class="text-muted">QRIS belum di-upload.</p>
+                <img id="qris_preview_image" src="#" alt="QRIS Preview" class="img-fluid rounded" style="max-height: 300px; display: none;">
+            @endif
+        </div>
+    </div>
+
+                  <div class="mb-3">
+                      <label for="qris_upload_input" class="btn btn-primary w-100">
+                          Unggah Gambar QRIS
+                          <input type="file" id="qris_upload_input" name="qris_image" class="d-none" accept="image/*" onchange="previewImage(event)">
+                      </label>
+                  </div>
+
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                      <button type="submit" class="btn btn-success">Simpan</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
 
     <!-- Set Lokasi -->
 <!-- Modal untuk Set Lokasi -->
@@ -413,39 +458,43 @@
 
           <!-- Dropdown menu -->
           <ul class="dropdown-menu">
-          <li class="dropdown-item text-center" style="margin-bottom:-10px;">
-            <strong>{{ session('username') }}</strong> <!-- Nama pengguna yang sedang login -->
-          </li>
-          <li>
-            <hr>
-            <button class="dropdown-item w-100 text-start mb-2" type="button" data-bs-toggle="modal"
-            data-bs-target="#settingModal1">
-            <i class="bi bi-person-fill-gear me-2"></i>Pengaturan</button>
-          </li>
-          <li>
-          <li>
-            <!-- Tombol Logout dengan margin kiri dan kanan yang proporsional -->
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="btn btn-danger text-start mx-auto d-block r-1"
-              style="width:145px; margin-bottom:0px;">
-              <i class="bi bi-box-arrow-right me-2"></i>Logout</button>
-            <!-- mx-auto untuk menyejajarkan tombol di tengah -->
-            </form>
-          </li>
+            <li class="dropdown-item text-center" style="margin-bottom:-10px;">
+              <strong>{{ session('username') }}</strong> <!-- Nama pengguna yang sedang login -->
+            </li>
+            <li>
+              <hr>
+              <button class="dropdown-item w-100 text-start mb-2" type="button" data-bs-toggle="modal"
+                data-bs-target="#settingModal1">
+                <i class="bi bi-person-fill-gear me-2"></i>Pengaturan</button>
+            </li>
+            <li>
+              <button class="dropdown-item w-100 text-start mb-2" type="button" data-bs-toggle="modal"
+                data-bs-target="#ModalMetodePembayaran">
+                <i class="bi bi-wallet-fill me-2"></i>Metode Pembayaran</button>
+            </li>
+            <li>
+            <li>
+              <!-- Tombol Logout dengan margin kiri dan kanan yang proporsional -->
+              <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="btn btn-danger text-start mx-auto d-block r-1"
+                  style="width:145px; margin-bottom:0px;">
+                  <i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+                <!-- mx-auto untuk menyejajarkan tombol di tengah -->
+              </form>
+            </li>
           </ul>
         </div>
         <li class="d-lg-none">
           <a href="#" class="rounded-circle bg-light p-2 mx-1" data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
-          <svg width="24" height="24" viewBox="0 0 24 24">
-            <use xlink:href="#search"></use>
-          </svg>
+            data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <use xlink:href="#search"></use>
+            </svg>
           </a>
         </li>
-        </ul>
-      </div>
-
+      </ul>
+    </div>
       </div>
     </div>
     <div class="container-fluid">
@@ -520,7 +569,6 @@
           <svg width="24" height="24" class="text-primary">
             <use xlink:href="#star-solid"></use>
           </svg>
-          4.5
           </span>
           <span class="price">RP. {{ number_format($item->harga_produk, 0, ',', '.') }} /KG</span>
           <div>

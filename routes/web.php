@@ -76,5 +76,5 @@ Route::get('/cari-produk-petani', [ProdukController::class, 'cariPetani'])->name
 Route::get('/search-by-location', [HomeController::class, 'searchByLocation'])->name('produk.cari.lokasi');
 
 
-
+Route::post('/qris/upload', [ProdukController::class, 'uploadQris'])->name('qris.upload')->middleware('auth');
 
